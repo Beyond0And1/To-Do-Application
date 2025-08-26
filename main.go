@@ -16,7 +16,6 @@ import (
 	"time"
 )
 
-//go:embed templates/*.gohtml static/*
 var embeddedFS embed.FS
 
 type Priority string
