@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Go
+/bin/
+/dist/
+/build/
+/coverage.out
+
+# App data
+todos.json
+
+# Editors
+.vscode/
+.idea/

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+
+
+</head>
+<body>
+  <header class="container">
+    <h1>✅ To Do List</h1>
+    <p class="muted">Simple and Fast — get your things Done!</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Add task</h2>
+      <form class="grid" method="POST" action="/add">
+        <input name="title" placeholder="Task title" autocomplete="off" required>
+        <select name="priority" aria-label="Priority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <input type="date" name="due" aria-label="Due date">
+        <textarea name="notes" rows="2" placeholder="Notes (optional)"></textarea>
+        <button type="submit">Add</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="list-head">
+        <h2>Tasks</h2>
+        <form method="POST" action="/clear-completed">
+          <button class="ghost" title="Clear completed">Clear completed</button>
+        </form>
+      </div>
+
+      {{if .}}
+      <ul class="todo-list">
+        {{range .}}
+        <li class="todo {{if .Done}}done{{end}}">
+          <div class="left">
+            <form method="POST" action="/toggle">
+              <input type="hidden" name="id" value="{{.ID}}">
+              <button class="check" title="Toggle">✔</button>
+            </form>
+            <div class="meta">
+              <div class="title">{{.Title}}</div>
+              <div class="sub">
+                {{if .Due}}📅 {{.Due}}{{end}}
+                {{if .Notes}} • {{.Notes}}{{end}}
+              </div>
+            </div>
+          </div>
+
+          <div class="right">
+            <span class="pill {{.Priority}}">{{.Priority}}</span>
+            <details>
+              <summary>Edit</summary>
+              <form class="edit" method="POST" action="/update">
+                <input type="hidden" name="id" value="{{.ID}}">
+                <input name="title" value="{{.Title}}" required>
+                <select name="priority">
+                  <option value="low" {{if eq .Priority "low"}}selected{{end}}>Low</option>
+                  <option value="medium" {{if eq .Priority "medium"}}selected{{end}}>Medium</option>
+                  <option value="high" {{if eq .Priority "high"}}selected{{end}}>High</option>
+                </select>
+                <input type="date" name="due" value="{{.Due}}">
+                <textarea name="notes" rows="2">{{.Notes}}</textarea>
+                <button type="submit">Save</button>
+              </form>
+            </details>
+            <form method="POST" action="/delete">
+              <input type="hidden" name="id" value="{{.ID}}">
+              <button class="ghost danger" title="Delete">Delete</button>
+            </form>
+          </div>
+        </li>
+        {{end}}
+      </ul>
+      {{else}}
+        <p class="muted">No tasks yet — add your first one above.</p>
+      {{end}}
+    </section>
+  </main>
+
+  <footer class="container muted">
+   {{/* You can add counts or stats here */}}
+  </footer>
+</body>
+</html>
